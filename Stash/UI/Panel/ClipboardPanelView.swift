@@ -319,8 +319,7 @@ struct ClipboardPanelView: View {
     }
 
     private var shortcutHints: String {
-        let primary = settings.pasteImmediately ? "⏎ Paste" : "⏎ Copy"
-        return "\(primary)   ⌘⏎ Copy   ⌘P Pin   ⌫ Delete   Space Preview   ⌘K Actions"
+        return "⏎ Copy   ⌘P Pin   ⌫ Delete   Space Preview   ⌘K Actions"
     }
 
     // MARK: - Actions
@@ -380,8 +379,7 @@ struct ClipboardPanelView: View {
     }
 
     private func activate(_ item: ClipboardItem) {
-        let mode: PasteService.Mode = settings.pasteImmediately ? .paste : .copy
-        services.paste.perform(item, mode: mode)
+        services.paste.perform(item, mode: .copy)
     }
 
     private func copy(_ item: ClipboardItem) {

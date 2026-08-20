@@ -12,7 +12,6 @@ import HotKey
 final class GlobalHotkeyManager {
     private let settings: SettingsStore
     private var openHotkey: HotKey?
-    private var plainPasteHotkey: HotKey?
     private var screenshotHotkey: HotKey?
 
     init(settings: SettingsStore) {
@@ -23,9 +22,6 @@ final class GlobalHotkeyManager {
         let services = AppServices.shared
         openHotkey = make(from: settings.hotkeyOpen) {
             services.panel.show()
-        }
-        plainPasteHotkey = make(from: settings.hotkeyPastePlain) {
-            services.paste.pasteCurrentClipboardPlain()
         }
         screenshotHotkey = make(from: settings.hotkeyScreenshot) {
             services.screenshotCapture.captureRegionToClipboard()

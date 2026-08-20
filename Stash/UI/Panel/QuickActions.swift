@@ -12,16 +12,15 @@ import UniformTypeIdentifiers
 // MARK: - Quick actions
 
 enum QuickAction: String, Identifiable, CaseIterable {
-    case paste, copy, pastePlain, copyText, pin, unpin, open, copyMarkdown,
+    case copy, copyPlain, copyText, pin, unpin, open, copyMarkdown,
          sendEmail, save, ocr, compress, edit, revealInFinder, addToCollection, delete
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
-        case .paste: "Paste"
         case .copy: "Copy"
-        case .pastePlain: "Paste as Plain Text"
+        case .copyPlain: "Copy as Plain Text"
         case .copyText: "Copy Text"
         case .pin: "Pin"
         case .unpin: "Unpin"
@@ -40,9 +39,8 @@ enum QuickAction: String, Identifiable, CaseIterable {
 
     var icon: String {
         switch self {
-        case .paste: "doc.on.clipboard"
         case .copy: "doc.on.doc"
-        case .pastePlain: "doc.plaintext"
+        case .copyPlain: "doc.plaintext"
         case .copyText: "textformat"
         case .pin: "pin"
         case .unpin: "pin.slash"
@@ -93,17 +91,17 @@ struct QuickActionsMenu: View {
         var base: [QuickAction]
         switch item.type {
         case .link:
-            base = [.paste, .copy, .open, .copyMarkdown]
+            base = [.copy, .open, .copyMarkdown]
         case .email:
-            base = [.paste, .copy, .sendEmail]
+            base = [.copy, .sendEmail]
         case .image, .screenshot:
-            base = [.paste, .copy, .copyText, .save, .ocr, .compress]
+            base = [.copy, .copyText, .save, .ocr, .compress]
         case .file:
-            base = [.paste, .copy, .revealInFinder]
+            base = [.copy, .revealInFinder]
         case .code:
-            base = [.paste, .copy, .pastePlain]
+            base = [.copy, .copyPlain]
         case .text, .phone, .color:
-            base = [.paste, .copy, .edit]
+            base = [.copy, .edit]
         }
         base.append(item.isPinned ? .unpin : .pin)
         base.append(.addToCollection)
@@ -114,12 +112,10 @@ struct QuickActionsMenu: View {
     private func perform(_ action: QuickAction) {
         let services = services
         switch action {
-        case .paste:
-            services.paste.perform(item, mode: .paste)
         case .copy:
             services.paste.perform(item, mode: .copy)
-        case .pastePlain:
-            services.paste.perform(item, mode: .pastePlain)
+        case .copyPlain:
+            services.paste.perform(item, mode: .copyPlain)
         case .copyText:
             if let text = item.textContent {
                 ClipboardWriter.writePlain(text)

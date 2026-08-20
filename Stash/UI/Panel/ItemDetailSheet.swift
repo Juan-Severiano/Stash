@@ -96,8 +96,8 @@ struct ItemDetailSheet: View {
                 dismiss()
             }
             .buttonStyle(.bordered)
-            Button("Paste") {
-                AppServices.shared.paste.perform(text: text, mode: .pasteEditedText(text))
+            Button("Copy to Clipboard") {
+                AppServices.shared.paste.perform(text: text, mode: .copyEditedText(text))
                 dismiss()
             }
             .buttonStyle(.borderedProminent)
@@ -143,8 +143,8 @@ struct OCRResultSheet: View {
                 dismiss()
             }
             .buttonStyle(.bordered)
-            Button("Paste") {
-                AppServices.shared.paste.perform(text: text, mode: .pasteEditedText(text))
+            Button("Copy to Clipboard") {
+                AppServices.shared.paste.perform(text: text, mode: .copyEditedText(text))
                 dismiss()
             }
             .buttonStyle(.borderedProminent)

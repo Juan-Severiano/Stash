@@ -176,7 +176,7 @@ struct HistoryRow: View {
             isHovering = hovering
         }
         .onTapGesture(count: 2) {
-            services.paste.perform(item, mode: .paste)
+            services.paste.perform(item, mode: .copy)
         }
     }
 

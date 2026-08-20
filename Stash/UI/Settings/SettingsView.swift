@@ -171,10 +171,6 @@ struct ClipboardSettingsView: View {
                     Text("10,000 items").tag(10000)
                 }
             }
-            Section("Paste") {
-                Toggle("Paste immediately after selection", isOn: $settings.pasteImmediately)
-                    .help("Enter pastes right away. Off: Enter only copies back to the clipboard.")
-            }
         }
         .formStyle(.grouped)
     }
@@ -237,13 +233,6 @@ struct ShortcutsSettingsView: View {
                     }
                 }
                 HStack {
-                    Text("Paste as Plain Text")
-                    Spacer()
-                    HotkeyRecorderView(value: $settings.hotkeyPastePlain) {
-                        services.hotkeys.refresh()
-                    }
-                }
-                HStack {
                     Text("Take Region Screenshot")
                     Spacer()
                     HotkeyRecorderView(value: $settings.hotkeyScreenshot) {
@@ -252,7 +241,7 @@ struct ShortcutsSettingsView: View {
                 }
             }
             Section {
-                Text("Instant Paste requires Accessibility permission. Screenshots require Screen Recording permission.")
+                Text("The region screenshot shortcut requests Screen Recording permission only when you use it.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -497,6 +486,8 @@ struct AboutSettingsView: View {
             Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            Link("Privacy Policy", destination: URL(string: "https://stash-clipboard-macos.ivory-sugar-7739.chatgpt.site/privacy")!)
+                .font(.callout.weight(.medium))
             Spacer()
             Text("⌥V to open your clipboard")
                 .font(.system(size: 11))

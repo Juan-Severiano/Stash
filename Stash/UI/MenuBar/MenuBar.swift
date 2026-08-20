@@ -24,7 +24,7 @@ struct StashMenuBarContent: View {
             Divider()
             ForEach(recent) { item in
                 Button(menuItemTitle(for: item)) {
-                    services.paste.perform(item, mode: .paste)
+                    services.paste.perform(item, mode: .copy)
                 }
             }
         }

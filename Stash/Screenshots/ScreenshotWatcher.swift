@@ -29,6 +29,7 @@ final class ScreenshotWatcher {
         known = [:]
         pending = [:]
         directory = nil
+        rememberExistingScreenshots()
         let timer = Timer(timeInterval: 1.5, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.scan()
@@ -36,7 +37,6 @@ final class ScreenshotWatcher {
         }
         RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
-        scan()
     }
 
     func stop() {
@@ -52,6 +52,17 @@ final class ScreenshotWatcher {
     }
 
     // MARK: - Scanning
+
+    /// Establishes a baseline so enabling monitoring never imports screenshots
+    /// that existed before the user opted in.
+    private func rememberExistingScreenshots() {
+        guard let dir = resolveDirectory() else { return }
+        let files = (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.fileSizeKey])) ?? []
+        for url in files where isScreenshot(url) {
+            let size = (try? url.resourceValues(forKeys: [.fileSizeKey]))?.fileSize.map(Int64.init) ?? 0
+            known[url.lastPathComponent] = size
+        }
+    }
 
     private func scan() {
         let dir = resolveDirectory()

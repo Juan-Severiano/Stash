@@ -38,7 +38,7 @@ final class AppServices {
 
             history = HistoryStore(db: db)
             collections = CollectionStore(db: db)
-            paste = PasteService(settings: settings, focusManager: focusManager, store: history)
+            paste = PasteService(settings: settings, store: history)
             monitor = ClipboardMonitor(settings: settings, store: history)
             retention = RetentionService(db: db, store: history)
             screenshotWatcher = ScreenshotWatcher(settings: settings, store: history)

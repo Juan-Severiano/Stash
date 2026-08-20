@@ -16,7 +16,6 @@ final class SettingsStore {
 
     private enum DefaultHotkeys {
         static let open = "\(9)|\(NSEvent.ModifierFlags.option.rawValue)"
-        static let pastePlain = "\(9)|\(NSEvent.ModifierFlags.option.rawValue | NSEvent.ModifierFlags.shift.rawValue)"
         static let screenshot = "\(21)|\(NSEvent.ModifierFlags.option.rawValue | NSEvent.ModifierFlags.shift.rawValue)"
     }
 
@@ -77,15 +76,10 @@ final class SettingsStore {
         set { defaults.set(newValue, forKey: "ignoreDuplicates") }
     }
 
-    var pasteImmediately: Bool {
-        get { bool("pasteImmediately", default: true) }
-        set { defaults.set(newValue, forKey: "pasteImmediately") }
-    }
-
     // MARK: - Screenshots
 
     var monitorScreenshots: Bool {
-        get { bool("monitorScreenshots", default: true) }
+        get { bool("monitorScreenshots", default: false) }
         set { defaults.set(newValue, forKey: "monitorScreenshots") }
     }
 
@@ -116,11 +110,6 @@ final class SettingsStore {
         set { defaults.set(newValue, forKey: "hotkeyOpen") }
     }
 
-    var hotkeyPastePlain: String {
-        get { string("hotkeyPastePlain", default: DefaultHotkeys.pastePlain) }
-        set { defaults.set(newValue, forKey: "hotkeyPastePlain") }
-    }
-
     var hotkeyScreenshot: String {
         get { string("hotkeyScreenshot", default: DefaultHotkeys.screenshot) }
         set { defaults.set(newValue, forKey: "hotkeyScreenshot") }
@@ -128,13 +117,11 @@ final class SettingsStore {
 
     func resetHotkeys() {
         hotkeyOpen = DefaultHotkeys.open
-        hotkeyPastePlain = DefaultHotkeys.pastePlain
         hotkeyScreenshot = DefaultHotkeys.screenshot
     }
 
     private func restoreInvalidHotkeys() {
         restoreHotkey("hotkeyOpen", defaultValue: DefaultHotkeys.open)
-        restoreHotkey("hotkeyPastePlain", defaultValue: DefaultHotkeys.pastePlain)
         restoreHotkey("hotkeyScreenshot", defaultValue: DefaultHotkeys.screenshot)
     }
 

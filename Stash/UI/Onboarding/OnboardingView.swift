@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     enum Step: Int, CaseIterable, Identifiable {
-        case welcome, clipboard, shortcut, accessibility, screenshots, ready
+        case welcome, clipboard, shortcut, screenshots, ready
         var id: Int { rawValue }
 
         var eyebrow: String {
@@ -17,7 +17,6 @@ struct OnboardingView: View {
             case .welcome: "WELCOME TO STASH"
             case .clipboard: "YOUR HISTORY"
             case .shortcut: "QUICK ACCESS"
-            case .accessibility: "ONE PERMISSION"
             case .screenshots: "SCREENSHOTS"
             case .ready: "ALL SET"
             }
@@ -28,7 +27,6 @@ struct OnboardingView: View {
     @Bindable private var settings = AppServices.shared.settings
     @Environment(\.dismiss) private var dismiss
     @State private var step: Step = .welcome
-    @State private var accessibilityTrusted = Permissions.isAccessibilityTrusted()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -53,13 +51,6 @@ struct OnboardingView: View {
                 return
             }
             NSApp.activate(ignoringOtherApps: true)
-        }
-        .task(id: step) {
-            guard step == .accessibility else { return }
-            while !accessibilityTrusted {
-                try? await Task.sleep(for: .seconds(1))
-                accessibilityTrusted = Permissions.isAccessibilityTrusted()
-            }
         }
     }
 
@@ -113,42 +104,20 @@ struct OnboardingView: View {
                 }
                 .controlSize(.large)
             }
-        case .accessibility:
-            actionStep(
-                asset: "OnboardingAccessibility",
-                title: accessibilityTrusted ? "Instant Paste is ready." : "Paste without switching back.",
-                body: accessibilityTrusted
-                    ? "Stash can restore focus and paste your selection directly into the app you were using."
-                    : "Accessibility lets Stash return to your previous app and paste a selected item for you."
-            ) {
-                if accessibilityTrusted {
-                    Label("Accessibility enabled", systemImage: "checkmark")
-                        .font(.callout.weight(.medium))
-                        .foregroundStyle(.green)
-                } else {
-                    Button("Enable Accessibility") {
-                        _ = Permissions.requestAccessibility()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-
-                    Text("If the prompt doesn’t appear, open System Settings to allow Stash.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
         case .screenshots:
             actionStep(
                 asset: "OnboardingScreenshots",
                 title: "Keep screenshots nearby.",
-                body: "Stash watches your screenshot folder so captures appear in your history automatically."
+                body: "Optionally add new screenshots to your local history. Nothing is monitored until you enable it."
             ) {
-                Button("Open Screen Recording Settings") {
-                    Permissions.openScreenRecordingSettings()
+                Button(settings.monitorScreenshots ? "Screenshot Monitoring Enabled" : "Enable Screenshot Monitoring") {
+                    settings.monitorScreenshots = true
+                    services.screenshotWatcher.start()
                 }
                 .controlSize(.large)
+                .disabled(settings.monitorScreenshots)
 
-                Text("Only needed for the custom screenshot shortcut.")
+                Text("The region screenshot shortcut requests Screen Recording permission only when you use it.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
