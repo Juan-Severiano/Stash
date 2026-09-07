@@ -19,7 +19,7 @@ permissions:
 jobs:
   release:
     name: Sign, notarize, and publish
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
       SIGNING_IDENTITY: ${{ secrets.DEVELOPER_ID_APPLICATION }}
