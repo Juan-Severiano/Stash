@@ -21,8 +21,8 @@ final class PasteService {
         self.store = store
     }
 
-    /// Copies a history item to the system pasteboard. The user pastes manually
-    /// in the destination app; Stash does not control other applications.
+    /// Copies a history item to the system pasteboard and pastes it into
+    /// whichever app was frontmost before the panel opened.
     func perform(_ item: ClipboardItem, mode: Mode) {
         store.markUsed(id: item.id)
         apply(item: item, mode: mode)
@@ -30,6 +30,7 @@ final class PasteService {
         if settings.playSounds {
             NSSound(named: "Pop")?.play()
         }
+        pasteAfterFocusRestored()
     }
 
     func perform(text: String, mode: Mode) {
@@ -40,6 +41,16 @@ final class PasteService {
         AppServices.shared.panel.hide(restoreFocus: true)
         if settings.playSounds {
             NSSound(named: "Pop")?.play()
+        }
+        pasteAfterFocusRestored()
+    }
+
+    /// The panel's window has to resign key and the target app has to become
+    /// active before a synthetic ⌘V would land in the right place.
+    private func pasteAfterFocusRestored() {
+        guard settings.autoPaste else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            PasteSimulator.simulatePaste()
         }
     }
 

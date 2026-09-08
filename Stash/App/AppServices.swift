@@ -53,6 +53,9 @@ final class AppServices {
             collections.load()
             monitor.start()
             hotkeys.refresh()
+            if settings.autoPaste {
+                _ = PasteSimulator.isTrusted(prompt: true)
+            }
             retention.schedule()
             if settings.monitorScreenshots {
                 screenshotWatcher.start()

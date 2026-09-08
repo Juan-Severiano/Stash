@@ -319,7 +319,8 @@ struct ClipboardPanelView: View {
     }
 
     private var shortcutHints: String {
-        return "⏎ Copy   ⌘P Pin   ⌫ Delete   Space Preview   ⌘K Actions"
+        let pasteHint = settings.autoPaste ? "⏎ Paste" : "⏎ Copy"
+        return "\(pasteHint)   ⌘P Pin   ⌫ Delete   Space Preview   ⌘K Actions"
     }
 
     // MARK: - Actions

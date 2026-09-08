@@ -144,6 +144,25 @@ struct GeneralSettingsView: View {
                     services.applyLaunchAtLogin()
                 }
             Toggle("Play sounds", isOn: $settings.playSounds)
+            Section("Paste") {
+                Toggle("Paste automatically after selecting an item", isOn: $settings.autoPaste)
+                    .onChange(of: settings.autoPaste) { _, newValue in
+                        if newValue {
+                            _ = PasteSimulator.isTrusted(prompt: true)
+                        }
+                    }
+                    .help("Requires Accessibility permission so Stash can send ⌘V on your behalf")
+                if settings.autoPaste && !PasteSimulator.isTrusted() {
+                    HStack {
+                        Label("Accessibility access needed", systemImage: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Button("Open System Settings") {
+                            NSWorkspace.shared.open(URL(string: "x-apple.systemsettings:com.apple.preference.security?Privacy_Accessibility")!)
+                        }
+                    }
+                }
+            }
         }
         .formStyle(.grouped)
         .onAppear {

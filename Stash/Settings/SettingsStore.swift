@@ -54,6 +54,13 @@ final class SettingsStore {
         set { defaults.set(newValue, forKey: "playSounds") }
     }
 
+    /// Simulates ⌘V into the previous app right after copying, instead of
+    /// requiring the user to paste manually. Needs Accessibility permission.
+    var autoPaste: Bool {
+        get { bool("autoPaste", default: true) }
+        set { defaults.set(newValue, forKey: "autoPaste") }
+    }
+
     var onboardingCompleted: Bool {
         get { bool("onboardingCompleted", default: false) }
         set { defaults.set(newValue, forKey: "onboardingCompleted") }
